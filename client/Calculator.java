@@ -1,10 +1,8 @@
 package client;
 
-import javax.swing.JPanel;
 import javax.swing.JFrame;
 import java.awt.FlowLayout;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;

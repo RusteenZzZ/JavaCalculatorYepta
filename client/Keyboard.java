@@ -19,7 +19,7 @@ public class Keyboard extends JPanel {
       put("(", OPERATION);
       put(")", OPERATION);
       put("%", OPERATION);
-      put("AC", OPERATION);
+      put("AC", CLEAR);
       put("sin", OPERATION);
       put("ln", OPERATION);
       put("7", OPERAND);
@@ -62,7 +62,7 @@ public class Keyboard extends JPanel {
       btn.setFont(new Font("Calibri", Font.PLAIN, 20));
       btn.setFocusPainted(false);
       btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      if (type == OPERATION) {
+      if (type == OPERATION || type == CLEAR) {
         btn.setBackground(new Color(218, 220, 224));
         btn.setBorder(BorderFactory.createEmptyBorder());
         btn.setBorder(BorderFactory.createLineBorder(new Color(80, 80, 80)));

@@ -16,8 +16,6 @@ public class EvaluateImpl implements Evaluate {
         Stack<NodeType> operators = new Stack<NodeType>();
 
         expression.forEach(s -> {
-            System.out.println(s);
-            System.out.println(values);
             if (NodeType.isDouble(s) || NodeType.isSpecialValue(s)) {
                 values.add(Double.parseDouble(s));
             } else if (s.equals("(")) {
@@ -74,16 +72,5 @@ public class EvaluateImpl implements Evaluate {
 
     private double _calc(NodeType op, double x) {
         return 0;
-    }
-
-    public static void main(String args[]) {
-        ArrayList<String> list = new ArrayList<String>(
-                Arrays.asList("(", "20", "*", "12", ")", "+", "4", "/", "2", "-", "7", "^", "9"));
-        EvaluateImpl ev = new EvaluateImpl();
-        try {
-            System.out.println(ev.evaluate(list));
-        } catch (Exception e) {
-
-        }
     }
 }

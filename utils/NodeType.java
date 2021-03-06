@@ -16,7 +16,7 @@ public enum NodeType {
                 return SUB;
             case "/":
                 return DIV;
-            case "*":
+            case "x":
                 return MUL;
             case "^":
                 return POW;
@@ -35,7 +35,7 @@ public enum NodeType {
             case "(":
                 return LB;
             case ")":
-                return RB;  
+                return RB;
             default:
                 return OPERAND;
         }

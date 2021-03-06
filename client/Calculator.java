@@ -4,7 +4,10 @@ import javax.swing.JPanel;
 import javax.swing.JFrame;
 import java.awt.FlowLayout;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.Color;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
 public class Calculator extends JFrame {
@@ -41,6 +44,14 @@ public class Calculator extends JFrame {
     });
 
     this.add(keyboard);
+
+    this.addComponentListener(new ComponentAdapter() {
+      @Override
+      public void componentResized(ComponentEvent e) {
+        keyboard.setPreferredSize(new Dimension(e.getComponent().getWidth(), e.getComponent().getHeight()*350/500));
+        screen.setPreferredSize(new Dimension(e.getComponent().getWidth(), e.getComponent().getHeight()*50/500));
+      }
+    });
 
     this.setVisible(true);
   }

@@ -43,7 +43,6 @@ public class Calculator extends JFrame {
     screen = new Screen();
     screen.setPreferredSize(new Dimension(600, 50));
     screen.setBackground(new Color(200, 200, 200));
-    screen.setLayout(new FlowLayout(FlowLayout.LEFT));
     
     this.add(screen, BorderLayout.PAGE_START);
 
@@ -81,15 +80,6 @@ public class Calculator extends JFrame {
     this.add(keyboard, BorderLayout.CENTER);  
 
     this.pack();
-
-    this.addComponentListener(new ComponentAdapter(){
-      @Override
-      public void componentResized(ComponentEvent e) {
-        int width = e.getComponent().getWidth();
-        // System.out.println(width + " " + width/28);
-        screen.setColumns(width/38);
-      }
-    });
 
     this.addKeyListener(new KeyAdapter() {
       @Override

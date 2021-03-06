@@ -78,7 +78,7 @@ public class Keyboard extends JPanel {
       btn.setFont(new Font("Calibri", Font.PLAIN, 20));
       btn.setFocusPainted(false);
       btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      btn.setBorder(new RoundedBorder(10));
+
       if (type == OPERATION || type == CLEAR) {
         btn.setBackground(new Color(218, 220, 224));
       } else if (type == OPERAND) {

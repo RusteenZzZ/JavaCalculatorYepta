@@ -1,7 +1,6 @@
 package services;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Stack;
 
 import utils.NodeType;
@@ -16,7 +15,10 @@ public class EvaluateImpl implements Evaluate {
         Stack<NodeType> operators = new Stack<NodeType>();
 
         expression.forEach(s -> {
-            if (NodeType.isDouble(s) || NodeType.isSpecialValue(s)) {
+            if (NodeType.isSpecialValue(s)) {
+                values.add(getValueOfSpeialValue(s));
+            }
+            if (NodeType.isDouble(s)) {
                 values.add(Double.parseDouble(s));
             } else if (s.equals("(")) {
                 operators.push(LB);

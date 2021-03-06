@@ -86,6 +86,15 @@ public enum NodeType {
         return isSpecialValue(getType(s));
     }
 
+    public static double getValueOfSpeialValue(String s) {
+        NodeType type = getType(s);
+        if (type == PI)
+            return Math.PI;
+        if (type == E)
+            return Math.E;
+        return 0.0;
+    }
+
     public static boolean isDouble(String string) {
         try {
             Double.parseDouble(string);

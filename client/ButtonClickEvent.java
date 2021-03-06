@@ -3,12 +3,13 @@ package client;
 import java.util.EventObject;
 
 public class ButtonClickEvent extends EventObject {
-    private String label;
+    private String label, text;
     private KeyboardButtonType type;
 
-    public ButtonClickEvent(Object source, String label, KeyboardButtonType type) {
+    public ButtonClickEvent(Object source, String label, String text, KeyboardButtonType type) {
         super(source);
         this.label = label;
+        this.text = text;
         this.type = type;
     }
 
@@ -24,5 +25,12 @@ public class ButtonClickEvent extends EventObject {
      */
     public KeyboardButtonType getType() {
         return type;
+    }
+
+    /**
+     * @return the text
+     */
+    public String getText() {
+        return text;
     }
 }

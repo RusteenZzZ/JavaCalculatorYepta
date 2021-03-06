@@ -85,6 +85,7 @@ public class Calculator extends JFrame {
     isResult = false;
     int length = expression.size();
     boolean added = false;
+    // Adding '0' before '-' since '-' is the operator that needs 2 operands
     if(length == 0 && text.equals("-")){
       added = true;
       expression.add("0");

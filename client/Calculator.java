@@ -58,7 +58,10 @@ public class Calculator extends JFrame {
             screen.setText("0");
           } else if (length > 1) {
             try {
-              screen.setText(String.valueOf(evaluate.evaluate(expression)));
+              String result = String.valueOf(evaluate.evaluate(expression));
+              expression.clear();
+              expression.add(result);
+              screen.setText(result);
             } catch (Exception ex) {
               System.out.println(ex.getMessage());
             }

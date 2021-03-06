@@ -85,6 +85,11 @@ public class Calculator extends JFrame {
     isResult = false;
     int length = expression.size();
     boolean added = false;
+    if(length == 0 && text.equals("-")){
+      added = true;
+      expression.add("0");
+      expression.add("-");
+    }
     if (length > 0) {
       String lastElement = expression.get(length - 1);
       if (isDouble(lastElement) && type == OPERAND || text.equals(".")) {

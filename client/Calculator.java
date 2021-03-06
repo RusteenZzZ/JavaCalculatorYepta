@@ -18,6 +18,8 @@ public class Calculator extends JFrame {
   public static final int WIDTH = 600;
   public static final int HEIGHT = 500;
 
+  public static boolean isResult = false;
+
   private ArrayList<String> expression;
   private Screen screen;
 
@@ -79,6 +81,8 @@ public class Calculator extends JFrame {
   }
 
   private void handleAddition(String text, KeyboardButtonType type) {
+    if(isResult) handleClear();
+    isResult = false;
     int length = expression.size();
     boolean added = false;
     if (length > 0) {
@@ -119,6 +123,7 @@ public class Calculator extends JFrame {
   }
 
   private void handleSubmit(Evaluate evaluate) {
+    isResult = true;
     int length = expression.size();
     if (length == 0) {
       screen.setText("0");

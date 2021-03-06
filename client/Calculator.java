@@ -2,18 +2,17 @@ package client;
 
 import javax.swing.JFrame;
 
-import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import services.Evaluate;
+
 import static client.KeyboardButtonType.*;
+import static utils.NodeType.isDouble;
 
 public class Calculator extends JFrame {
   public static final int WIDTH = 600;
@@ -40,7 +39,7 @@ public class Calculator extends JFrame {
     screen = new Screen();
     screen.setPreferredSize(new Dimension(600, 50));
     screen.setBackground(new Color(200, 200, 200));
-    
+
     this.add(screen, BorderLayout.PAGE_START);
 
     Keyboard keyboard = new Keyboard();
@@ -70,29 +69,14 @@ public class Calculator extends JFrame {
           screen.setText("");
           expression.clear();
         } else {
-          String currentText = screen.getText();
-          expression.add(text);
-          screen.setText(currentText + text);
+          handleAddition(text, type);
         }
       }
     });
 
-    this.add(keyboard, BorderLayout.CENTER);  
+    this.add(keyboard, BorderLayout.CENTER);
 
     this.pack();
-
-    this.addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-          case 8: // Backspace
-            removeLast();
-            break;
-          default:
-            break;
-        }
-      }
-    });
 
     this.addMouseListener(new MouseAdapter() {
       @Override
@@ -107,15 +91,22 @@ public class Calculator extends JFrame {
     pack();
   }
 
-  private void removeLast() {
+  private void handleAddition(String text, KeyboardButtonType type) {
     int length = expression.size();
-    if (length == 0)
-      return;
-
-    String removed = expression.remove(length - 1);
+    boolean added = false;
+    if (length > 0 && (type == OPERAND || text.equals("."))) {
+      String lastElement = expression.get(length - 1);
+      if (isDouble(lastElement)) {
+        if ((!lastElement.contains(".") && text.equals(".")) || type == OPERAND) {
+          added = true;
+          expression.set(length - 1, lastElement + text);
+        }
+      }
+    }
+    if (!added) {
+      expression.add(text);
+    }
     String currentText = screen.getText();
-    // Making sure to delete whole element not just one char of it in case of
-    // multichared element
-    screen.setText(currentText.substring(0, currentText.length() - removed.length()));
+    screen.setText(currentText + text);
   }
 }

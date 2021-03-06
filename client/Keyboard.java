@@ -5,11 +5,13 @@ import javax.swing.BorderFactory;
 import java.awt.GridLayout;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.util.LinkedHashMap;
 
 import static client.KeyboardButtonType.*;
 
 public class Keyboard extends JPanel {
+  private ButtonClickListener listener;
   private LinkedHashMap<String, KeyboardButtonType> buttonsData = new LinkedHashMap<String, KeyboardButtonType>() {
     {
       put("π", OPERATION);
@@ -59,6 +61,7 @@ public class Keyboard extends JPanel {
       KeyboardButton btn = new KeyboardButton(label, type);
       btn.setFont(new Font("Calibri", Font.PLAIN, 20));
       btn.setFocusPainted(false);
+      btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       if (type == OPERATION) {
         btn.setBackground(new Color(218, 220, 224));
         btn.setBorder(BorderFactory.createEmptyBorder());
@@ -72,7 +75,19 @@ public class Keyboard extends JPanel {
         btn.setBorder(BorderFactory.createLineBorder(new Color(80, 80, 80), 2, true));
       }
 
+      btn.addActionListener(ev -> {
+        ButtonClickEvent e = new ButtonClickEvent(btn, label, type);
+        this.listener.ButtonClickEventOccurred(e);
+      });
+
       this.add(btn);
     });
+  }
+
+  /**
+   * @param listener the listener to set
+   */
+  public void setListener(ButtonClickListener listener) {
+    this.listener = listener;
   }
 }

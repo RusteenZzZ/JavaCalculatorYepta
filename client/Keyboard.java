@@ -78,17 +78,14 @@ public class Keyboard extends JPanel {
       btn.setFont(new Font("Calibri", Font.PLAIN, 20));
       btn.setFocusPainted(false);
       btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+      btn.setBorder(new RoundedBorder(10));
       if (type == OPERATION || type == CLEAR) {
         btn.setBackground(new Color(218, 220, 224));
-        btn.setBorder(BorderFactory.createEmptyBorder());
-        btn.setBorder(BorderFactory.createLineBorder(new Color(80, 80, 80)));
       } else if (type == OPERAND) {
         btn.setBackground(new Color(241, 243, 244));
-        btn.setBorder(BorderFactory.createLineBorder(new Color(80, 80, 80)));
       } else if (type == EQUAL) {
         btn.setBackground(new Color(66, 133, 244));
         btn.setForeground(Color.WHITE);
-        btn.setBorder(BorderFactory.createLineBorder(new Color(80, 80, 80), 2, true));
       }
 
       btn.addActionListener(ev -> {

@@ -1,7 +1,7 @@
 package utils;
 
 public enum NodeType {
-    OPERAND, ADD, SUB, DIV, MOD, MUL, POW, SIN, COS, TAN, CTG, LOG, PI, E;
+    OPERAND, ADD, SUB, DIV, MOD, MUL, POW, SIN, COS, TAN, CTG, LOG, PI, E, LB, RB;
 
     /**
      * 
@@ -32,6 +32,10 @@ public enum NodeType {
                 return E;
             case "π":
                 return PI;
+            case "(":
+                return LB;
+            case ")":
+                return RB;  
             default:
                 return OPERAND;
         }

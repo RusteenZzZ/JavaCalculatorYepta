@@ -3,12 +3,11 @@ package client;
 import javax.swing.JFrame;
 
 import java.awt.FlowLayout;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Color;
-import java.awt.event.ComponentAdapter;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -34,15 +33,15 @@ public class Calculator extends JFrame {
     this.toFront();
     this.setState(java.awt.Frame.NORMAL);
     this.requestFocus();
-    setFocusTraversalKeysEnabled(false);
+    this.setLayout(new BorderLayout());
 
-    this.setLayout(new FlowLayout());
+    setFocusTraversalKeysEnabled(false);
 
     screen = new Screen();
     screen.setPreferredSize(new Dimension(600, 50));
     screen.setBackground(new Color(200, 200, 200));
     screen.setLayout(new FlowLayout(FlowLayout.LEFT));
-    this.add(screen);
+    this.add(screen, BorderLayout.PAGE_START);
 
     Keyboard keyboard = new Keyboard();
     keyboard.setPreferredSize(new Dimension(600, 350));
@@ -75,15 +74,9 @@ public class Calculator extends JFrame {
       }
     });
 
-    this.add(keyboard);
+    this.add(keyboard, BorderLayout.CENTER);
 
-    this.addComponentListener(new ComponentAdapter() {
-      @Override
-      public void componentResized(ComponentEvent e) {
-        keyboard.setPreferredSize(new Dimension(e.getComponent().getWidth(), e.getComponent().getHeight() * 350 / 500));
-        screen.setPreferredSize(new Dimension(e.getComponent().getWidth(), e.getComponent().getHeight() * 50 / 500));
-      }
-    });
+    this.pack();
 
     this.addKeyListener(new KeyAdapter() {
       @Override
@@ -106,7 +99,9 @@ public class Calculator extends JFrame {
       }
     });
 
-    this.setVisible(true);
+    setLocationRelativeTo(null);
+    setVisible(true);
+    pack();
   }
 
   private void removeLast() {

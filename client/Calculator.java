@@ -51,6 +51,7 @@ public class Calculator extends JFrame {
       public void ButtonClickEventOccurred(ButtonClickEvent e) {
         KeyboardButtonType type = e.getType();
         String label = e.getLabel();
+        String text = e.getText();
 
         if (type == EQUAL) {
           int length = expression.size();
@@ -68,8 +69,8 @@ public class Calculator extends JFrame {
           expression.clear();
         } else {
           String currentText = screen.getText();
-          expression.add(label);
-          screen.setText(currentText + e.getText());
+          expression.add(text);
+          screen.setText(currentText + text);
         }
       }
     });

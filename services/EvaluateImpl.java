@@ -15,15 +15,18 @@ public class EvaluateImpl implements Evaluate {
         Stack<NodeType> operators = new Stack<NodeType>();
 
         expression.forEach(s -> {
+            System.out.println(s);
             if (NodeType.isSpecialValue(s)) {
                 values.add(getValueOfSpeialValue(s));
             }
             if (NodeType.isDouble(s)) {
                 values.add(Double.parseDouble(s));
             } else if (s.equals("(")) {
+                System.out.println("open");
                 operators.push(LB);
             } else if (s.equals(")")) {
                 while (!operators.isEmpty() && operators.peek() != LB) {
+                    System.out.println("loop");
                     values.push(calc(operators.pop(), values));
                 }
 
@@ -38,6 +41,9 @@ public class EvaluateImpl implements Evaluate {
             }
         });
         while (!operators.isEmpty()) {
+            if (operators.peek() == LB) {
+                throw new InvalidExpression("Rustam qehbe");
+            }
             values.push(calc(operators.pop(), values));
         }
 
@@ -45,6 +51,7 @@ public class EvaluateImpl implements Evaluate {
     }
 
     private double calc(NodeType op, Stack<Double> values) {
+        System.out.println(op);
         if (isBinaryOperator(op)) {
             return _calc(op, values.pop(), values.pop());
         } else {
@@ -73,6 +80,21 @@ public class EvaluateImpl implements Evaluate {
     }
 
     private double _calc(NodeType op, double x) {
-        return 0;
+        switch (op) {
+            case SQRT:
+                return Math.sqrt(x);
+            case LOG:
+                return Math.log10(x);
+            case SIN:
+                return Math.sin(x);
+            case COS:
+                return Math.cos(x);
+            case TAN:
+                return Math.tan(x);
+            case LN:
+                return Math.log(x);
+            default:
+                return 0;
+        }
     }
 }

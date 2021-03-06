@@ -1,7 +1,7 @@
 package utils;
 
 public enum NodeType {
-    OPERAND, ADD, SUB, DIV, MOD, MUL, POW, SIN, COS, TAN, CTG, LOG, PI, E, LB, RB;
+    OPERAND, ADD, SUB, DIV, MOD, MUL, POW, SQRT, SIN, COS, TAN, CTG, LOG, LN, PI, E, LB, RB;
 
     /**
      * 
@@ -36,6 +36,12 @@ public enum NodeType {
                 return LB;
             case ")":
                 return RB;
+            case "√":
+                return SQRT;
+            case "log":
+                return LOG;
+            case "ln":
+                return LN;
             default:
                 return OPERAND;
         }
@@ -47,7 +53,7 @@ public enum NodeType {
      * @return boolean value representing if the nt is an operator
      */
     public static boolean isOperator(NodeType nt) {
-        return nt != OPERAND && nt != E && nt != PI;
+        return nt != OPERAND && nt != E && nt != PI && nt != LB && nt != RB;
     }
 
     /**

@@ -52,22 +52,9 @@ public class Calculator extends JFrame {
         String text = e.getText();
 
         if (type == EQUAL) {
-          int length = expression.size();
-          if (length == 0) {
-            screen.setText("0");
-          } else if (length > 1) {
-            try {
-              String result = String.valueOf(evaluate.evaluate(expression));
-              expression.clear();
-              expression.add(result);
-              screen.setText(result);
-            } catch (Exception ex) {
-              System.out.println(ex.getMessage());
-            }
-          }
+          handleSubmit(evaluate);
         } else if (type == CLEAR) {
-          screen.setText("");
-          expression.clear();
+          handleClear();
         } else {
           handleAddition(text, type);
         }
@@ -94,9 +81,12 @@ public class Calculator extends JFrame {
   private void handleAddition(String text, KeyboardButtonType type) {
     int length = expression.size();
     boolean added = false;
-    if (length > 0 && (type == OPERAND || text.equals("."))) {
+    if (length > 0) {
       String lastElement = expression.get(length - 1);
-      if (isDouble(lastElement)) {
+      if (isDouble(lastElement) && type == OPERAND || text.equals(".")) {
+        // If the last inserted element is number and if it doesn't have decimal point
+        // and the current text is decimal point or the current text is a number
+        // then concatenate current text with the last one
         if ((!lastElement.contains(".") && text.equals(".")) || type == OPERAND) {
           added = true;
           expression.set(length - 1, lastElement + text);
@@ -104,9 +94,48 @@ public class Calculator extends JFrame {
       }
     }
     if (!added) {
-      expression.add(text);
+      int stringLength = text.length();
+
+      // Separate braces from the operators
+      if (stringLength > 1 && text.charAt(stringLength - 1) == '(') {
+        if (stringLength > 2 && text.charAt(stringLength - 2) == '^') {
+
+          // case of e^(
+          expression.add(text.substring(0, stringLength - 2));
+          expression.add("^");
+        } else {
+          // case of sin(, cos(, etc.
+          expression.add(text.substring(0, stringLength - 1));
+        }
+        expression.add("(");
+
+        added = true;
+      } else {
+        expression.add(text);
+      }
     }
     String currentText = screen.getText();
     screen.setText(currentText + text);
+  }
+
+  private void handleSubmit(Evaluate evaluate) {
+    int length = expression.size();
+    if (length == 0) {
+      screen.setText("0");
+    } else if (length > 1) {
+      try {
+        String result = String.valueOf(evaluate.evaluate(expression));
+        expression.clear();
+        expression.add(result);
+        screen.setText(result);
+      } catch (Exception ex) {
+        System.out.println(ex.getMessage());
+      }
+    }
+  }
+
+  private void handleClear() {
+    screen.setText("");
+    expression.clear();
   }
 }

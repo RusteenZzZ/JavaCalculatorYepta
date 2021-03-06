@@ -7,7 +7,7 @@ import static utils.NodeType.*;
 
 public class Operator {
     static final ArrayList<NodeType> binaryOperators = new ArrayList<>(Arrays.asList(ADD, SUB, DIV, MOD, MUL, POW));
-    static final ArrayList<NodeType> unaryOperators = new ArrayList<>(Arrays.asList(SIN, COS, TAN, CTG, LOG));
+    static final ArrayList<NodeType> unaryOperators = new ArrayList<>(Arrays.asList(SIN, COS, TAN, CTG, LOG, SQRT));
 
     public static boolean isUnaryOperator(NodeType nt) {
         return Operator.unaryOperators.contains(nt);
@@ -23,12 +23,14 @@ public class Operator {
      * @return priority of operator
      */
     public static int getPriority(NodeType nt) {
+        if (nt == LB || nt == RB)
+            return 0;
         if (nt == SUB || nt == ADD)
             return 1;
         else if (nt == MUL || nt == DIV)
             return 2;
         else if (nt == POW)
             return 3;
-        return 0;
+        return 4;
     }
 }

@@ -55,6 +55,7 @@ public class Keyboard extends JPanel {
       put("tan", "tan(");
       put("log", "log(");
       put("EXP", "e^(");
+      put("ln", "ln(");
       put("xⁿ", "^(");
       put("√", "√(");
     }

@@ -85,15 +85,22 @@ public class Calculator extends JFrame {
     isResult = false;
     int length = expression.size();
     boolean added = false;
-    // Adding '0' before '-' since '-' is the operator that needs 2 operands
-    if(length == 0 && text.equals("-")){
+    // Adding '0' before '-' since '-' is the operator that needs 2 operands in case of
+    // filling the beginning of the expression
+    if(text.equals("-") && length == 0){
       added = true;
       expression.add("0");
       expression.add("-");
     }
     if (length > 0) {
       String lastElement = expression.get(length - 1);
-      if (isDouble(lastElement) && type == OPERAND || text.equals(".")) {
+      // Adding '0' before '-' since '-' is the operator that needs 2 operands in case of
+      // filling the middle of the expression
+      if(lastElement.equals("(") && text.equals("-")){
+        added = true;
+        expression.add("0");
+        expression.add("-");
+      }else if (isDouble(lastElement) && type == OPERAND || text.equals(".")) {
         // If the last inserted element is number and if it doesn't have decimal point
         // and the current text is decimal point or the current text is a number
         // then concatenate current text with the last one

@@ -16,7 +16,7 @@ public class Screen extends JPanel {
     textField.setFont(new Font("Calibri", Font.PLAIN, 38));
     textField.setBorder(BorderFactory.createLineBorder(new Color(150, 150, 150)));
     textField.setBackground(new Color(150, 150, 150));
-
+    textField.setTransferHandler(null);
     setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.weightx = 1;

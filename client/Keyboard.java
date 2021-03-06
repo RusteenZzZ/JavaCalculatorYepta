@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static client.KeyboardButtonType.*;
@@ -47,6 +48,18 @@ public class Keyboard extends JPanel {
     }
   };
 
+  private HashMap<String, String> buttonDifferentTexts = new HashMap<String, String>() {
+    {
+      put("sin", "sin(");
+      put("cos", "cos(");
+      put("tan", "tan(");
+      put("log", "log(");
+      put("EXP", "e^(");
+      put("xⁿ", "^(");
+      put("√", "√(");
+    }
+  };
+
   public Keyboard() {
     GridLayout layout = new GridLayout(5, 6);
     layout.setHgap(2);
@@ -58,7 +71,10 @@ public class Keyboard extends JPanel {
 
   public void buttonsInit() {
     buttonsData.forEach((label, type) -> {
-      KeyboardButton btn = new KeyboardButton(label, type);
+      String text = buttonDifferentTexts.containsKey(label) ? buttonDifferentTexts.get(label) : label;
+
+      KeyboardButton btn = new KeyboardButton(label, text, type);
+
       btn.setFont(new Font("Calibri", Font.PLAIN, 20));
       btn.setFocusPainted(false);
       btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -76,7 +92,7 @@ public class Keyboard extends JPanel {
       }
 
       btn.addActionListener(ev -> {
-        ButtonClickEvent e = new ButtonClickEvent(btn, label, type);
+        ButtonClickEvent e = new ButtonClickEvent(btn, label, text, type);
         this.listener.ButtonClickEventOccurred(e);
       });
 

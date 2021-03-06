@@ -69,7 +69,7 @@ public class Calculator extends JFrame {
         } else {
           String currentText = screen.getText();
           expression.add(label);
-          screen.setText(currentText + label);
+          screen.setText(currentText + e.getText());
         }
       }
     });

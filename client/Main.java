@@ -5,7 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.Dimension;
 import java.awt.Color;
 
-public class CalcClient {
+public class Main {
   public static final int WIDTH = 600;
   public static final int HEIGHT = 450;
 

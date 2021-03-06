@@ -50,7 +50,6 @@ public class Calculator extends JFrame {
       @Override
       public void ButtonClickEventOccurred(ButtonClickEvent e) {
         KeyboardButtonType type = e.getType();
-        String label = e.getLabel();
         String text = e.getText();
 
         if (type == EQUAL) {

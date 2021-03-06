@@ -8,7 +8,7 @@ public class Screen extends JPanel {
   private JLabel label;
 
   public Screen() {
-    label = new JLabel("2+4=6");
+    label = new JLabel("");
     label.setFont(new Font("Calibri", Font.PLAIN, 38));
     this.add(label);
   }

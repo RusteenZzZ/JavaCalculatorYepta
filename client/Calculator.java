@@ -10,6 +10,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
 import services.Evaluate;
@@ -41,6 +44,7 @@ public class Calculator extends JFrame {
     screen.setPreferredSize(new Dimension(600, 50));
     screen.setBackground(new Color(200, 200, 200));
     screen.setLayout(new FlowLayout(FlowLayout.LEFT));
+    
     this.add(screen, BorderLayout.PAGE_START);
 
     Keyboard keyboard = new Keyboard();
@@ -74,9 +78,18 @@ public class Calculator extends JFrame {
       }
     });
 
-    this.add(keyboard, BorderLayout.CENTER);
+    this.add(keyboard, BorderLayout.CENTER);  
 
     this.pack();
+
+    this.addComponentListener(new ComponentAdapter(){
+      @Override
+      public void componentResized(ComponentEvent e) {
+        int width = e.getComponent().getWidth();
+        // System.out.println(width + " " + width/28);
+        screen.setColumns(width/38);
+      }
+    });
 
     this.addKeyListener(new KeyAdapter() {
       @Override

@@ -133,10 +133,20 @@ public class Calculator extends JFrame {
     boolean added = false;
     boolean isOperatorChange = false;
     boolean isSpecialValueChange = false;
+    boolean isForbiddenToEdit = false;
     String lastElement;
+
+    //Forbidding adding special value after an operand and an operand after a special value
+    if(length > 0){
+      lastElement = expression.get(length - 1);
+      if((isSpecialValue(text) && isOperand(lastElement)) || (isOperand(text) && isSpecialValue(lastElement))){
+        isForbiddenToEdit = true;
+        added = true;
+      }
+    }
     
     // Forbidding adding sequential binary operators
-    if(length > 0){
+    if(length > 0 && !isForbiddenToEdit){
       lastElement = expression.get(length - 1);
       if(isBinaryOperator(text) && isBinaryOperator(lastElement)){
         added = true;
@@ -154,7 +164,7 @@ public class Calculator extends JFrame {
     }
 
     //Forbidding adding sequential special values such as π and e
-    if(length > 0){
+    if(length > 0 && !isForbiddenToEdit){
       lastElement = expression.get(length - 1);
       if(isSpecialValue(text) && isSpecialValue(lastElement)){
         added = true;
@@ -172,12 +182,12 @@ public class Calculator extends JFrame {
     // Adding '0' before '-' since '-' is the operator that needs 2 operands in case
     // of
     // filling the beginning of the expression
-    if (text.equals("-") && length == 0) {
+    if (text.equals("-") && length == 0 && !isForbiddenToEdit) {
       added = true;
       expression.add("0");
       expression.add("-");
     }
-    if (length > 0) {
+    if (length > 0 && !isForbiddenToEdit) {
       lastElement = expression.get(length - 1);
       // Adding '0' before '-' since '-' is the operator that needs 2 operands in case
       // of
@@ -219,7 +229,7 @@ public class Calculator extends JFrame {
     }
     String currentText = screen.getText();
 
-    if (!isOperatorChange && !isSpecialValueChange) {
+    if (!isOperatorChange && !isSpecialValueChange && !isForbiddenToEdit) {
       screen.setText(currentText + text);
     }
   }

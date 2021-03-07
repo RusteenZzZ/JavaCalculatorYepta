@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import services.Evaluate;
 
@@ -24,6 +25,23 @@ public class Calculator extends JFrame {
 
   private ArrayList<String> expression;
   private Screen screen;
+  private HashMap<String, String> operationAliases = new HashMap<String, String>() {
+    {
+      put("s", "sin(");
+      put("c", "cos(");
+      put("t", "tan(");
+      put("p", "π");
+      put("L", "ln(");
+      put("l", "log(");
+      put("e", "e");
+      put("v", "√(");
+      put("x", "e^(");
+      put("*", "x");
+      put("%", "%");
+      put("(", "(");
+      put(")", ")");
+    }
+  };
 
   public Calculator(Evaluate evaluate) {
     this.expression = new ArrayList<String>();
@@ -47,18 +65,18 @@ public class Calculator extends JFrame {
         String s = String.valueOf(c);
         int code = e.getKeyCode();
 
-        if (Character.isDigit(c) || c == '.') {
-          handleAddition(s, OPERAND, false);
+        if (operationAliases.containsKey(s)) {
+          handleAddition(operationAliases.get(s), OPERATION);
+        } else if (Character.isDigit(c) || c == '.') {
+          handleAddition(s, OPERAND);
         } else if (isOperator(s)) {
-          handleAddition(s, OPERATION, false);
+          handleAddition(s, OPERATION);
         } else if (code == KeyEvent.VK_BACK_SPACE) {
           removeLast();
-          e.consume();
         } else if (code == KeyEvent.VK_ENTER) {
           handleSubmit(evaluate);
-        } else {
-          e.consume();
         }
+        e.consume();
       }
     });
 
@@ -78,7 +96,7 @@ public class Calculator extends JFrame {
         } else if (type == CLEAR) {
           handleClear();
         } else {
-          handleAddition(text, type, true);
+          handleAddition(text, type);
         }
       }
     });
@@ -103,7 +121,7 @@ public class Calculator extends JFrame {
     });
   }
 
-  private void handleAddition(String text, KeyboardButtonType type, boolean isButton) {
+  private void handleAddition(String text, KeyboardButtonType type) {
     if (isResult)
       handleClear();
     isResult = false;
@@ -159,9 +177,7 @@ public class Calculator extends JFrame {
     }
     String currentText = screen.getText();
 
-    if (isButton) {
-      screen.setText(currentText + text);
-    }
+    screen.setText(currentText + text);
   }
 
   private void handleSubmit(Evaluate evaluate) {

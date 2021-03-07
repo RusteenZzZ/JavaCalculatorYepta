@@ -5,13 +5,16 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import services.Evaluate;
 
 import static client.KeyboardButtonType.*;
 import static utils.NodeType.isDouble;
-import static utils.NodeType.isOperator;;;
+import static utils.NodeType.isOperator;
+import static javax.swing.JOptionPane.*;
 
 public class Calculator extends JFrame {
   public static final int WIDTH = 600;
@@ -83,6 +86,18 @@ public class Calculator extends JFrame {
 
     setLocationRelativeTo(null);
     setVisible(true);
+
+    addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        int confirmed = showConfirmDialog(null, "Are you sure you want to exit the program?",
+            "Exit Program Message Box", YES_NO_OPTION);
+
+        if (confirmed == YES_OPTION) {
+          dispose();
+        }
+      }
+    });
   }
 
   private void handleAddition(String text, KeyboardButtonType type, boolean isButton) {
@@ -158,9 +173,8 @@ public class Calculator extends JFrame {
         expression.add(result);
         screen.setText(result);
       } catch (Exception ex) {
-        System.out.println(ex.getMessage());
-        expression.clear();
-        screen.setText("");
+        showMessageDialog(null, ex.getMessage());
+        handleClear();
       }
     }
   }

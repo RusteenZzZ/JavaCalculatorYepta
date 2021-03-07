@@ -23,6 +23,8 @@ public class Calculator extends JFrame {
   private ArrayList<String> expression;
   private Screen screen;
 
+  public boolean isResult = false;
+
   public Calculator(Evaluate evaluate) {
     this.expression = new ArrayList<String>();
 
@@ -55,13 +57,15 @@ public class Calculator extends JFrame {
           handleAddition(String.valueOf(c), OPERAND);
         } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) { // Backslash
           removeLast();
-          // JTextField f = (JTextField) e.getSource();
+          // System.out.println("GTRTGREFTGRRTBBGHTMUHYTRTG");
+          JTextField f = (JTextField) e.getSource();
           // f.setText("");
-          // e.consume();
+          e.consume();
 
         } else {
+          screen.setText(currentText);
         }
-        screen.setText(currentText);
+        
       }
     });
 
@@ -104,6 +108,8 @@ public class Calculator extends JFrame {
   }
 
   private void handleAddition(String text, KeyboardButtonType type) {
+    if(isResult) handleClear();
+    isResult = false;
     int length = expression.size();
     boolean added = false;
     if (length > 0) {
@@ -144,6 +150,7 @@ public class Calculator extends JFrame {
   }
 
   private void handleSubmit(Evaluate evaluate) {
+    if(isResult == false) isResult = true;
     int length = expression.size();
     if (length == 0) {
       screen.setText("0");
@@ -165,15 +172,21 @@ public class Calculator extends JFrame {
   }
 
   private void removeLast() {
-    System.out.println(expression);
+    // System.out.println(expression); // +++
     int length = expression.size();
     if (length == 0)
       return;
     String removed = expression.remove(length - 1);
+    System.out.println(expression);
     String currentText = screen.getText();
+    System.out.println(currentText); // ---
+    // System.out.println(removed + " " + removed.length()); // +++
     // Making sure to delete whole element not just one char of it in case of
     // multichared element
-    System.out.println(currentText.substring(0, currentText.length() - removed.length()));
+    System.out.println("-->" + currentText.substring(0, currentText.length() - removed.length())); // ---
+    // System.out.println(currentText.length() + " " + (currentText.length() - removed.length()));
+    // System.out.println(currentText.substring(0, currentText.length() - removed.length()));
+    screen.update(screen.getGraphics());
     screen.setText(currentText.substring(0, currentText.length() - removed.length()));
   }
 }

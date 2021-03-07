@@ -24,7 +24,7 @@ public class EvaluateImpl implements Evaluate {
                 operators.push(LB);
             } else if (s.equals(")")) {
                 if (operators.isEmpty()) {
-                    throw new InvalidExpression("Braces don't match");
+                    throw new InvalidExpression("Bad Expression: braces don't match");
                 }
                 while (!operators.isEmpty() && operators.peek() != LB) {
                     try {
@@ -33,7 +33,7 @@ public class EvaluateImpl implements Evaluate {
                     }
                 }
                 if (operators.isEmpty()) {
-                    throw new InvalidExpression("Braces don't match");
+                    throw new InvalidExpression("Bad Expression: braces don't match");
                 }
 
                 // Remove '(' from the stack
@@ -53,7 +53,7 @@ public class EvaluateImpl implements Evaluate {
         while (!operators.isEmpty()) {
             NodeType operator = operators.pop();
             if (operator == LB) {
-                throw new InvalidExpression("Bad Expression. Braces don't match");
+                throw new InvalidExpression("Bad Expression: braces don't match");
             }
             values.push(calc(operator, values));
         }
@@ -65,12 +65,12 @@ public class EvaluateImpl implements Evaluate {
         int operandsCount = values.size();
         if (isBinaryOperator(op)) {
             if (operandsCount < 2) {
-                throw new InvalidExpression("Invalid input");
+                throw new InvalidExpression("Bad Expression: binary operator requires 2 operands");
             }
             return _calc(op, values.pop(), values.pop());
         } else if (isUnaryOperator(op)) {
             if (operandsCount < 1) {
-                throw new InvalidExpression("Invalid input");
+                throw new InvalidExpression("Bad Expression: unary operator requires 1 operand");
             }
             return _calc(op, values.pop());
         } else {
@@ -88,7 +88,7 @@ public class EvaluateImpl implements Evaluate {
                 return y * x;
             case DIV:
                 if (x == 0) {
-                    throw new ArithmeticException("Zero division");
+                    throw new ArithmeticException("Bad Operand: can not divide by zero");
                 }
                 return y / x;
             case MOD:
@@ -105,12 +105,12 @@ public class EvaluateImpl implements Evaluate {
         switch (op) {
             case SQRT:
                 if (x < 0) {
-                    throw new ArithmeticException("Cannot find square root of negative value");
+                    throw new ArithmeticException("Bad Operand: can not find square root of negative number");
                 }
                 return Math.sqrt(x);
             case LOG:
                 if (x < 0) {
-                    throw new ArithmeticException("Invalid input");
+                    throw new ArithmeticException("Bad Operand: can not find log of negative number");
                 }
                 return Math.log10(x);
             case SIN:
@@ -121,7 +121,7 @@ public class EvaluateImpl implements Evaluate {
                 return Math.tan(x);
             case LN:
                 if (x < 0) {
-                    throw new ArithmeticException("Invalid input");
+                    throw new ArithmeticException("Bad Operand: can not find natural log of negative number");
                 }
                 return Math.log(x);
             default:

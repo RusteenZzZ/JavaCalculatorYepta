@@ -13,6 +13,8 @@ import static client.KeyboardButtonType.*;
 import static utils.NodeType.isDouble;
 import static utils.NodeType.isOperator;
 import static utils.NodeType.isOperand;
+import static utils.NodeType.isSpecialValue;
+import static utils.Operator.isBinaryOperator;
 
 public class Calculator extends JFrame {
   public static final int WIDTH = 600;
@@ -87,18 +89,21 @@ public class Calculator extends JFrame {
   }
 
   private void handleAddition(String text, KeyboardButtonType type, boolean isButton) {
+    // Clearing the screen if the result of the previous equation is shown
     if (isResult)
       handleClear();
     isResult = false;
-    // System.out.println("-->" + screen.getText());
+
     int length = expression.size();
     boolean added = false;
     boolean isOperatorChange = false;
+    boolean isSpecialValueChange = false;
     String lastElement;
     
+    // Forbidding adding sequential binary operators
     if(length > 0){
       lastElement = expression.get(length - 1);
-      if(type == OPERATION && isOperator(lastElement)){
+      if(isBinaryOperator(text) && isBinaryOperator(lastElement)){
         added = true;
         isOperatorChange = true;
         String currentText = screen.getText();
@@ -107,10 +112,24 @@ public class Calculator extends JFrame {
         if(length > 1 && expression.get(length - 2) == "0" && rem == "-") expression.remove(length - 2);
         if(length > 1 && text == "-" && !(isOperand(expression.get(length - 2)))) expression.add("0");
         expression.add(text);
-        
-        // System.out.println(currentText.substring(0, currentText.length() - rem.length()));
-        // System.out.println(currentText.substring(0, currentText.length() - rem.length()) + text);
         screen.setText(currentText.substring(0, currentText.length() - 1) + text);
+        
+        length = expression.size();
+      }
+    }
+
+    //Forbidding adding sequential special values such as π and e
+    if(length > 0){
+      lastElement = expression.get(length - 1);
+      if(isSpecialValue(text) && isSpecialValue(lastElement)){
+        added = true;
+        isSpecialValueChange = true;
+        String currentText = screen.getText();
+        String rem = expression.remove(length - 1);
+
+        expression.add(text);
+        screen.setText(currentText.substring(0, currentText.length() - 1) + text);
+
         length = expression.size();
       }
     }
@@ -165,11 +184,9 @@ public class Calculator extends JFrame {
     }
     String currentText = screen.getText();
 
-    if (isButton && !isOperatorChange) {
+    if (isButton && !isOperatorChange && !isSpecialValueChange) {
       screen.setText(currentText + text);
     }
-    System.out.println(expression + " " + expression.size());
-    // System.out.println("-->" + screen.getText());
   }
 
   private void handleSubmit(Evaluate evaluate) {

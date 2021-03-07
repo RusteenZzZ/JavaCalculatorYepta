@@ -5,7 +5,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import services.Evaluate;
 
@@ -15,6 +18,7 @@ import static utils.NodeType.isOperator;
 import static utils.NodeType.isOperand;
 import static utils.NodeType.isSpecialValue;
 import static utils.Operator.isBinaryOperator;
+import static javax.swing.JOptionPane.*;
 
 public class Calculator extends JFrame {
   public static final int WIDTH = 600;
@@ -24,6 +28,23 @@ public class Calculator extends JFrame {
 
   private ArrayList<String> expression;
   private Screen screen;
+  private HashMap<String, String> operationAliases = new HashMap<String, String>() {
+    {
+      put("s", "sin(");
+      put("c", "cos(");
+      put("t", "tan(");
+      put("p", "π");
+      put("L", "ln(");
+      put("l", "log(");
+      put("e", "e");
+      put("v", "√(");
+      put("x", "e^(");
+      put("*", "x");
+      put("%", "%");
+      put("(", "(");
+      put(")", ")");
+    }
+  };
 
   public Calculator(Evaluate evaluate) {
     this.expression = new ArrayList<String>();
@@ -45,17 +66,20 @@ public class Calculator extends JFrame {
         KeyEvent e = ev.getEvent();
         char c = e.getKeyChar();
         String s = String.valueOf(c);
+        int code = e.getKeyCode();
 
-        if (Character.isDigit(c) || c == '.') {
-          handleAddition(s, OPERAND, false);
+        if (operationAliases.containsKey(s)) {
+          handleAddition(operationAliases.get(s), OPERATION);
+        } else if (Character.isDigit(c) || c == '.') {
+          handleAddition(s, OPERAND);
         } else if (isOperator(s)) {
-          handleAddition(s, OPERATION, false);
-        } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+          handleAddition(s, OPERATION);
+        } else if (code == KeyEvent.VK_BACK_SPACE) {
           removeLast();
-          e.consume();
-        } else {
-          e.consume();
+        } else if (code == KeyEvent.VK_ENTER) {
+          handleSubmit(evaluate);
         }
+        e.consume();
       }
     });
 
@@ -75,7 +99,7 @@ public class Calculator extends JFrame {
         } else if (type == CLEAR) {
           handleClear();
         } else {
-          handleAddition(text, type, true);
+          handleAddition(text, type);
         }
       }
     });
@@ -86,10 +110,21 @@ public class Calculator extends JFrame {
 
     setLocationRelativeTo(null);
     setVisible(true);
+
+    addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        int confirmed = showConfirmDialog(null, "Are you sure you want to exit the program?", "Exit Program",
+            YES_NO_OPTION);
+
+        if (confirmed == YES_OPTION) {
+          dispose();
+        }
+      }
+    });
   }
 
-  private void handleAddition(String text, KeyboardButtonType type, boolean isButton) {
-    // Clearing the screen if the result of the previous equation is shown
+  private void handleAddition(String text, KeyboardButtonType type) {
     if (isResult)
       handleClear();
     isResult = false;
@@ -184,7 +219,7 @@ public class Calculator extends JFrame {
     }
     String currentText = screen.getText();
 
-    if (isButton && !isOperatorChange && !isSpecialValueChange) {
+    if (!isOperatorChange && !isSpecialValueChange) {
       screen.setText(currentText + text);
     }
   }
@@ -201,9 +236,8 @@ public class Calculator extends JFrame {
         expression.add(result);
         screen.setText(result);
       } catch (Exception ex) {
-        System.out.println(ex.getMessage());
-        expression.clear();
-        screen.setText("");
+        showMessageDialog(null, ex.getMessage());
+        handleClear();
       }
     }
   }

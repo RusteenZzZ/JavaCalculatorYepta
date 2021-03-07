@@ -1,7 +1,6 @@
 package client;
 
 import javax.swing.JPanel;
-import javax.swing.BorderFactory;
 import java.awt.GridLayout;
 import java.awt.Font;
 import java.awt.Color;

@@ -51,7 +51,7 @@ public class Calculator extends JFrame {
 
     this.setTitle("Calculator");
     this.setSize(WIDTH, HEIGHT);
-    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
     this.setLayout(new BorderLayout());
 
@@ -112,13 +112,15 @@ public class Calculator extends JFrame {
     setVisible(true);
 
     addWindowListener(new WindowAdapter() {
+
       @Override
       public void windowClosing(WindowEvent e) {
-        int confirmed = showConfirmDialog(null, "Are you sure you want to exit the program?", "Exit Program",
-            YES_NO_OPTION);
+        final Object[] options = { "Yes", "No" };
+        int confirmed = showOptionDialog(null, "Are you sure you want to exit the program?", "Exit Program",
+            YES_NO_OPTION, WARNING_MESSAGE, null, options, options[1]);
 
         if (confirmed == YES_OPTION) {
-          dispose();
+          System.exit(0);
         }
       }
     });
@@ -136,37 +138,40 @@ public class Calculator extends JFrame {
     boolean isForbiddenToEdit = false;
     String lastElement;
 
-    //Forbidding adding special value after an operand and an operand after a special value
-    if(length > 0){
+    // Forbidding adding special value after an operand and an operand after a
+    // special value
+    if (length > 0) {
       lastElement = expression.get(length - 1);
-      if((isSpecialValue(text) && isOperand(lastElement)) || (isOperand(text) && isSpecialValue(lastElement))){
+      if ((isSpecialValue(text) && isOperand(lastElement)) || (isOperand(text) && isSpecialValue(lastElement))) {
         isForbiddenToEdit = true;
         added = true;
       }
     }
-    
+
     // Forbidding adding sequential binary operators
-    if(length > 0 && !isForbiddenToEdit){
+    if (length > 0 && !isForbiddenToEdit) {
       lastElement = expression.get(length - 1);
-      if(isBinaryOperator(text) && isBinaryOperator(lastElement)){
+      if (isBinaryOperator(text) && isBinaryOperator(lastElement)) {
         added = true;
         isOperatorChange = true;
         String currentText = screen.getText();
         String rem = expression.remove(length - 1);
-        
-        if(length > 1 && expression.get(length - 2) == "0" && rem == "-") expression.remove(length - 2);
-        if(length > 1 && text == "-" && !(isOperand(expression.get(length - 2)))) expression.add("0");
+
+        if (length > 1 && expression.get(length - 2) == "0" && rem == "-")
+          expression.remove(length - 2);
+        if (length > 1 && text == "-" && !(isOperand(expression.get(length - 2))))
+          expression.add("0");
         expression.add(text);
         screen.setText(currentText.substring(0, currentText.length() - 1) + text);
-        
+
         length = expression.size();
       }
     }
 
-    //Forbidding adding sequential special values such as π and e
-    if(length > 0 && !isForbiddenToEdit){
+    // Forbidding adding sequential special values such as π and e
+    if (length > 0 && !isForbiddenToEdit) {
       lastElement = expression.get(length - 1);
-      if(isSpecialValue(text) && isSpecialValue(lastElement)){
+      if (isSpecialValue(text) && isSpecialValue(lastElement)) {
         added = true;
         isSpecialValueChange = true;
         String currentText = screen.getText();

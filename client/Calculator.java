@@ -1,8 +1,6 @@
 package client;
 
 import javax.swing.JFrame;
-import javax.swing.JTextField;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Color;
@@ -23,8 +21,6 @@ public class Calculator extends JFrame {
 
   private ArrayList<String> expression;
   private Screen screen;
-
-  public boolean isResult = false;
 
   public Calculator(Evaluate evaluate) {
     this.expression = new ArrayList<String>();

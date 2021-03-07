@@ -45,14 +45,17 @@ public class Calculator extends JFrame {
         KeyEvent e = ev.getEvent();
         char c = e.getKeyChar();
         String s = String.valueOf(c);
+        int code = e.getKeyCode();
 
         if (Character.isDigit(c) || c == '.') {
           handleAddition(s, OPERAND, false);
         } else if (isOperator(s)) {
           handleAddition(s, OPERATION, false);
-        } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+        } else if (code == KeyEvent.VK_BACK_SPACE) {
           removeLast();
           e.consume();
+        } else if (code == KeyEvent.VK_ENTER) {
+          handleSubmit(evaluate);
         } else {
           e.consume();
         }

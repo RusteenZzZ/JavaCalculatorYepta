@@ -36,7 +36,7 @@ public class Screen extends JPanel {
       // Using for correct handling of backslash
       public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
-        if (code == KeyEvent.VK_BACK_SPACE) {
+        if (code == KeyEvent.VK_BACK_SPACE || code == KeyEvent.VK_ENTER) {
           listener.inputChangeEventOccurred(new InputChangeEvent(textField, e));
         } else if (code == KeyEvent.VK_LEFT) {
           // Preventing caret movement

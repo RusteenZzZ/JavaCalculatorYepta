@@ -1,18 +1,19 @@
 package client;
 
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import services.Evaluate;
 
 import static client.KeyboardButtonType.*;
 import static utils.NodeType.isDouble;
+import static utils.NodeType.isOperator;;;
 
 public class Calculator extends JFrame {
   public static final int WIDTH = 600;
@@ -23,6 +24,8 @@ public class Calculator extends JFrame {
   private ArrayList<String> expression;
   private Screen screen;
 
+  public boolean isResult = false;
+
   public Calculator(Evaluate evaluate) {
     this.expression = new ArrayList<String>();
 
@@ -30,17 +33,32 @@ public class Calculator extends JFrame {
     this.setSize(WIDTH, HEIGHT);
     this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-    this.setFocusable(true);
-    this.toFront();
-    this.setState(java.awt.Frame.NORMAL);
-    this.requestFocus();
     this.setLayout(new BorderLayout());
-
-    setFocusTraversalKeysEnabled(false);
 
     screen = new Screen();
     screen.setPreferredSize(new Dimension(600, 50));
     screen.setBackground(new Color(200, 200, 200));
+
+    screen.setListener(new InputChangeListener() {
+
+      @Override
+      public void inputChangeEventOccurred(InputChangeEvent ev) {
+        KeyEvent e = ev.getEvent();
+        char c = e.getKeyChar();
+        String s = String.valueOf(c);
+
+        if (Character.isDigit(c) || c == '.') {
+          handleAddition(s, OPERAND, false);
+        } else if (isOperator(s)) {
+          handleAddition(s, OPERATION, false);
+        } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+          removeLast();
+          e.consume();
+        } else {
+          e.consume();
+        }
+      }
+    });
 
     this.add(screen, BorderLayout.PAGE_START);
 
@@ -58,7 +76,7 @@ public class Calculator extends JFrame {
         } else if (type == CLEAR) {
           handleClear();
         } else {
-          handleAddition(text, type);
+          handleAddition(text, type, true);
         }
       }
     });
@@ -67,21 +85,13 @@ public class Calculator extends JFrame {
 
     this.pack();
 
-    this.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mousePressed(MouseEvent e) {
-        toFront();
-        requestFocus();
-      }
-    });
-
     setLocationRelativeTo(null);
     setVisible(true);
-    pack();
   }
 
-  private void handleAddition(String text, KeyboardButtonType type) {
-    if(isResult) handleClear();
+  private void handleAddition(String text, KeyboardButtonType type, boolean isButton) {
+    if (isResult)
+      handleClear();
     isResult = false;
     int length = expression.size();
     boolean added = false;
@@ -132,11 +142,15 @@ public class Calculator extends JFrame {
       }
     }
     String currentText = screen.getText();
-    screen.setText(currentText + text);
+
+    if (isButton) {
+      screen.setText(currentText + text);
+    }
   }
 
   private void handleSubmit(Evaluate evaluate) {
-    isResult = true;
+    if (isResult == false)
+      isResult = true;
     int length = expression.size();
     if (length == 0) {
       screen.setText("0");
@@ -155,5 +169,16 @@ public class Calculator extends JFrame {
   private void handleClear() {
     screen.setText("");
     expression.clear();
+  }
+
+  private void removeLast() {
+    int length = expression.size();
+    if (length == 0)
+      return;
+    String removed = expression.remove(length - 1);
+    String currentText = screen.getText();
+    // Making sure to delete whole element not just one char of it in case of
+    // multichared element
+    screen.setText(currentText.substring(0, currentText.length() - removed.length()));
   }
 }

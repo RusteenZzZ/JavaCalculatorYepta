@@ -25,6 +25,7 @@ public class Screen extends JPanel {
 
     textField.addKeyListener(new KeyAdapter() {
       @Override
+      // Using to prevent random characters
       public void keyTyped(KeyEvent e) {
         if (e.getKeyChar() != '\b') {
           listener.inputChangeEventOccurred(new InputChangeEvent(textField, e));
@@ -32,9 +33,15 @@ public class Screen extends JPanel {
       }
 
       @Override
+      // Using for correct handling of backslash
       public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+        int code = e.getKeyCode();
+        if (code == KeyEvent.VK_BACK_SPACE) {
           listener.inputChangeEventOccurred(new InputChangeEvent(textField, e));
+        } else if (code == KeyEvent.VK_LEFT) {
+          // Preventing caret movement
+          e.consume();
+          textField.setCaretPosition(textField.getText().length());
         }
       }
     });

@@ -1,12 +1,14 @@
 package client;
 
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import services.Evaluate;
@@ -39,6 +41,29 @@ public class Calculator extends JFrame {
     screen = new Screen();
     screen.setPreferredSize(new Dimension(600, 50));
     screen.setBackground(new Color(200, 200, 200));
+
+    screen.setListener(new InputChangeListener() {
+
+      @Override
+      public void inputChangeEventOccurred(InputChangeEvent ev) {
+
+        String currentText = screen.getText();
+        KeyEvent e = ev.getEvent();
+        char c = e.getKeyChar();
+
+        if (Character.isDigit(c) || c == '.') {
+          handleAddition(String.valueOf(c), OPERAND);
+        } else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) { // Backslash
+          removeLast();
+          // JTextField f = (JTextField) e.getSource();
+          // f.setText("");
+          // e.consume();
+
+        } else {
+        }
+        screen.setText(currentText);
+      }
+    });
 
     this.add(screen, BorderLayout.PAGE_START);
 
@@ -137,5 +162,18 @@ public class Calculator extends JFrame {
   private void handleClear() {
     screen.setText("");
     expression.clear();
+  }
+
+  private void removeLast() {
+    System.out.println(expression);
+    int length = expression.size();
+    if (length == 0)
+      return;
+    String removed = expression.remove(length - 1);
+    String currentText = screen.getText();
+    // Making sure to delete whole element not just one char of it in case of
+    // multichared element
+    System.out.println(currentText.substring(0, currentText.length() - removed.length()));
+    screen.setText(currentText.substring(0, currentText.length() - removed.length()));
   }
 }

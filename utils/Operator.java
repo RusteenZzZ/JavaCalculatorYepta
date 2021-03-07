@@ -7,7 +7,7 @@ import static utils.NodeType.*;
 
 public class Operator {
     static final ArrayList<NodeType> binaryOperators = new ArrayList<>(Arrays.asList(ADD, SUB, DIV, MOD, MUL, POW));
-    static final ArrayList<NodeType> unaryOperators = new ArrayList<>(Arrays.asList(SIN, COS, TAN, CTG, LOG, SQRT));
+    static final ArrayList<NodeType> unaryOperators = new ArrayList<>(Arrays.asList(SIN, COS, TAN, CTG, LOG, SQRT, LN));
 
     public static boolean isUnaryOperator(NodeType nt) {
         return Operator.unaryOperators.contains(nt);

@@ -14,20 +14,26 @@ public class EvaluateImpl implements Evaluate {
         Stack<Double> values = new Stack<Double>();
         Stack<NodeType> operators = new Stack<NodeType>();
 
-        expression.forEach(s -> {
-            System.out.println(s);
+        for (String s : expression) {
             if (NodeType.isSpecialValue(s)) {
                 values.add(getValueOfSpeialValue(s));
             }
             if (NodeType.isDouble(s)) {
                 values.add(Double.parseDouble(s));
             } else if (s.equals("(")) {
-                System.out.println("open");
                 operators.push(LB);
             } else if (s.equals(")")) {
+                if (operators.isEmpty()) {
+                    throw new InvalidExpression("Braces don't match");
+                }
                 while (!operators.isEmpty() && operators.peek() != LB) {
-                    System.out.println("loop");
-                    values.push(calc(operators.pop(), values));
+                    try {
+                        values.push(calc(operators.pop(), values));
+                    } catch (Exception e) {
+                    }
+                }
+                if (operators.isEmpty()) {
+                    throw new InvalidExpression("Braces don't match");
                 }
 
                 // Remove '(' from the stack
@@ -35,27 +41,40 @@ public class EvaluateImpl implements Evaluate {
 
             } else if (NodeType.isOperator(s)) {
                 while (!operators.isEmpty() && getPriority(getType(s)) <= getPriority(operators.peek())) {
-                    values.push(calc(operators.pop(), values));
+                    try {
+                        values.push(calc(operators.pop(), values));
+                    } catch (Exception e) {
+                    }
                 }
                 operators.push(getType(s));
             }
-        });
+        }
+
         while (!operators.isEmpty()) {
-            if (operators.peek() == LB) {
-                throw new InvalidExpression("ggwp");
+            NodeType operator = operators.pop();
+            if (operator == LB) {
+                throw new InvalidExpression("Bad Expression. Braces don't match");
             }
-            values.push(calc(operators.pop(), values));
+            values.push(calc(operator, values));
         }
 
         return values.pop();
     }
 
-    private double calc(NodeType op, Stack<Double> values) {
-        System.out.println(op);
+    private double calc(NodeType op, Stack<Double> values) throws InvalidExpression {
+        int operandsCount = values.size();
         if (isBinaryOperator(op)) {
+            if (operandsCount < 2) {
+                throw new InvalidExpression("Invalid input");
+            }
             return _calc(op, values.pop(), values.pop());
-        } else {
+        } else if (isUnaryOperator(op)) {
+            if (operandsCount < 1) {
+                throw new InvalidExpression("Invalid input");
+            }
             return _calc(op, values.pop());
+        } else {
+            throw new InvalidExpression("Invalid input");
         }
     }
 
@@ -68,9 +87,12 @@ public class EvaluateImpl implements Evaluate {
             case MUL:
                 return y * x;
             case DIV:
+                if (x == 0) {
+                    throw new ArithmeticException("Zero division");
+                }
                 return y / x;
             case MOD:
-                return (int) y % (int) x;
+                return y % x;
             case POW:
                 return Math.pow(y, x);
             default:
@@ -82,8 +104,14 @@ public class EvaluateImpl implements Evaluate {
     private double _calc(NodeType op, double x) {
         switch (op) {
             case SQRT:
+                if (x < 0) {
+                    throw new ArithmeticException("Cannot find square root of negative value");
+                }
                 return Math.sqrt(x);
             case LOG:
+                if (x < 0) {
+                    throw new ArithmeticException("Invalid input");
+                }
                 return Math.log10(x);
             case SIN:
                 return Math.sin(x);
@@ -92,6 +120,9 @@ public class EvaluateImpl implements Evaluate {
             case TAN:
                 return Math.tan(x);
             case LN:
+                if (x < 0) {
+                    throw new ArithmeticException("Invalid input");
+                }
                 return Math.log(x);
             default:
                 return 0;

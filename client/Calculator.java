@@ -91,22 +91,24 @@ public class Calculator extends JFrame {
     isResult = false;
     int length = expression.size();
     boolean added = false;
-    // Adding '0' before '-' since '-' is the operator that needs 2 operands in case of
+    // Adding '0' before '-' since '-' is the operator that needs 2 operands in case
+    // of
     // filling the beginning of the expression
-    if(text.equals("-") && length == 0){
+    if (text.equals("-") && length == 0) {
       added = true;
       expression.add("0");
       expression.add("-");
     }
     if (length > 0) {
       String lastElement = expression.get(length - 1);
-      // Adding '0' before '-' since '-' is the operator that needs 2 operands in case of
+      // Adding '0' before '-' since '-' is the operator that needs 2 operands in case
+      // of
       // filling the middle of the expression
-      if(lastElement.equals("(") && text.equals("-")){
+      if (lastElement.equals("(") && text.equals("-")) {
         added = true;
         expression.add("0");
         expression.add("-");
-      }else if (isDouble(lastElement) && type == OPERAND || text.equals(".")) {
+      } else if (isDouble(lastElement) && type == OPERAND || text.equals(".")) {
         // If the last inserted element is number and if it doesn't have decimal point
         // and the current text is decimal point or the current text is a number
         // then concatenate current text with the last one
@@ -145,8 +147,7 @@ public class Calculator extends JFrame {
   }
 
   private void handleSubmit(Evaluate evaluate) {
-    if (isResult == false)
-      isResult = true;
+    isResult = true;
     int length = expression.size();
     if (length == 0) {
       screen.setText("0");
@@ -158,6 +159,8 @@ public class Calculator extends JFrame {
         screen.setText(result);
       } catch (Exception ex) {
         System.out.println(ex.getMessage());
+        expression.clear();
+        screen.setText("");
       }
     }
   }

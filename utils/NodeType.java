@@ -76,6 +76,15 @@ public enum NodeType {
 
     /**
      * 
+     * @param s
+     * @return boolean value representing if s is and operand
+     */
+    public static boolean isOperand(String s) {
+        return isOperand(getType(s));
+    }
+
+    /**
+     * 
      * @param nt
      * @return boolean value representing if the nt is a special value
      */

@@ -15,6 +15,9 @@ import services.Evaluate;
 import static client.KeyboardButtonType.*;
 import static utils.NodeType.isDouble;
 import static utils.NodeType.isOperator;
+import static utils.NodeType.isOperand;
+import static utils.NodeType.isSpecialValue;
+import static utils.Operator.isBinaryOperator;
 import static javax.swing.JOptionPane.*;
 
 public class Calculator extends JFrame {
@@ -125,8 +128,47 @@ public class Calculator extends JFrame {
     if (isResult)
       handleClear();
     isResult = false;
+
     int length = expression.size();
     boolean added = false;
+    boolean isOperatorChange = false;
+    boolean isSpecialValueChange = false;
+    String lastElement;
+    
+    // Forbidding adding sequential binary operators
+    if(length > 0){
+      lastElement = expression.get(length - 1);
+      if(isBinaryOperator(text) && isBinaryOperator(lastElement)){
+        added = true;
+        isOperatorChange = true;
+        String currentText = screen.getText();
+        String rem = expression.remove(length - 1);
+        
+        if(length > 1 && expression.get(length - 2) == "0" && rem == "-") expression.remove(length - 2);
+        if(length > 1 && text == "-" && !(isOperand(expression.get(length - 2)))) expression.add("0");
+        expression.add(text);
+        screen.setText(currentText.substring(0, currentText.length() - 1) + text);
+        
+        length = expression.size();
+      }
+    }
+
+    //Forbidding adding sequential special values such as π and e
+    if(length > 0){
+      lastElement = expression.get(length - 1);
+      if(isSpecialValue(text) && isSpecialValue(lastElement)){
+        added = true;
+        isSpecialValueChange = true;
+        String currentText = screen.getText();
+        String rem = expression.remove(length - 1);
+
+        expression.add(text);
+        screen.setText(currentText.substring(0, currentText.length() - 1) + text);
+
+        length = expression.size();
+      }
+    }
+
     // Adding '0' before '-' since '-' is the operator that needs 2 operands in case
     // of
     // filling the beginning of the expression
@@ -136,7 +178,7 @@ public class Calculator extends JFrame {
       expression.add("-");
     }
     if (length > 0) {
-      String lastElement = expression.get(length - 1);
+      lastElement = expression.get(length - 1);
       // Adding '0' before '-' since '-' is the operator that needs 2 operands in case
       // of
       // filling the middle of the expression
@@ -177,7 +219,9 @@ public class Calculator extends JFrame {
     }
     String currentText = screen.getText();
 
-    screen.setText(currentText + text);
+    if (!isOperatorChange && !isSpecialValueChange) {
+      screen.setText(currentText + text);
+    }
   }
 
   private void handleSubmit(Evaluate evaluate) {

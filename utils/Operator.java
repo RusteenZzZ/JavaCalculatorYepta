@@ -17,6 +17,10 @@ public class Operator {
         return Operator.binaryOperators.contains(nt);
     }
 
+    public static boolean isBinaryOperator(String s){
+        return isBinaryOperator(getType(s));
+    }
+
     /**
      * 
      * @param nt

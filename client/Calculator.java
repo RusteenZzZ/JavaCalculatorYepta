@@ -93,8 +93,8 @@ public class Calculator extends JFrame {
     addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent e) {
-        int confirmed = showConfirmDialog(null, "Are you sure you want to exit the program?",
-            "Exit Program Message Box", YES_NO_OPTION);
+        int confirmed = showConfirmDialog(null, "Are you sure you want to exit the program?", "Exit Program",
+            YES_NO_OPTION);
 
         if (confirmed == YES_OPTION) {
           dispose();

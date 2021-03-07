@@ -42,7 +42,7 @@ public class EvaluateImpl implements Evaluate {
         });
         while (!operators.isEmpty()) {
             if (operators.peek() == LB) {
-                throw new InvalidExpression("Rustam qehbe");
+                throw new InvalidExpression("ggwp");
             }
             values.push(calc(operators.pop(), values));
         }

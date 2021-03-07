@@ -33,7 +33,7 @@ public class Screen extends JPanel {
       }
 
       @Override
-      // Using for correct handling of backslash
+      // Using for correct handling of backspace
       public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_BACK_SPACE || code == KeyEvent.VK_ENTER) {
